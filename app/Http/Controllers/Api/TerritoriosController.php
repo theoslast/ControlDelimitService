@@ -5,6 +5,7 @@ use TerritoryAdmin\Http\Controllers\Controller;
 use TerritoryAdmin\Territorio;
 use TerritoryAdmin\Manzana;
 use TerritoryAdmin\Registro;
+use Carbon\Carbon;
 use DB;
 use Validator;
 
@@ -91,33 +92,46 @@ class TerritoriosController extends Controller
     }
 
     //POST:
-    public function completeTerritorio(Request $request)
+    public function completeRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required',
-            'nombre' => 'required'
+            'idcongregacion' => 'required',
+            'idterritorio' => 'required',
+            'conductor' => 'required',
+            'localidad' => 'required',
+            'numero' => 'required', 
+            'manzanas' => 'required'
         ]);
         if($validator->fails()){
             return response()->json(['status' => 'error', 'message' => $validator->errors() ]);      
         }
         DB::beginTransaction();
-        $territorio = Territorio::find($request->id);
-        $territorio->idEstadoTerritorio = 3;
-        $territorio->save();
-        $manzanas = Manzana::where('idterritorio', $request->id)->get();
-        $todo = "";
-        foreach ($manzanas as $key => $item) {
-            $item->estado = 1;
-            $item->save();
-            $todo += $item;
+        $manzanas_pendientes = Manzana::where('idterritorio', $request->idterritorio)->where('estado', 0)->get();
+        $manzanas_terminadas = explode(',', trim($request->manzanas, ","));
+        foreach ($manzanas_pendientes as $key => $value) {
+            if (in_array($value->letra, $manzanas_terminadas)) {
+                $manzana = Manzana::find($value->id);
+                $manzana->estado = 1;
+                $manzana->save();
+            }
         }
+        $territorio = Territorio::find($request->idterritorio);
+        if (count($manzanas_terminadas) == count($manzanas_pendientes)) {
+            $territorio->idestadoterritorio = 3;
+        } else {
+            $territorio->idestadoterritorio = 2;
+        }
+        $territorio->save();
         $registro = new Registro();
-        $registro->conductor = $request->nombre;
-        $registro->fecha = date();
-        $registro->activo = true;
-        $registro->manzanas = $item;
-        $registro->idTerritorio = $request->id;
+        $registro->idcongregacion = $request->idcongregacion;
+        $registro->numero = $request->numero;
+        $registro->localidad = $request->localidad;
+        $registro->conductor = $request->conductor;
+        $registro->fecha = Carbon::now();
+        $registro->manzanas = trim($request->manzanas, ",");
         $registro->observacion = $request->observacion;
+        $registro->activo = true;
+        $registro->save();
         DB::commit();
         return response()->json(['status' => 'ok', 'message' => 'ok']);
     }

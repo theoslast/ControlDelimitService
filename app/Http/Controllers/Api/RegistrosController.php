@@ -39,6 +39,7 @@ class RegistrosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //+++++++++++obsoleto
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

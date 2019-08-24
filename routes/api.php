@@ -45,13 +45,13 @@ Route::group(['middleware' => 'cors'], function()
 
     Route::post('/ingreso', 'Api\CongregacionesController@loginByCongregacion');
 
-    Route::post('/completeAll', 'Api\TerritoriosController@completeTerritorio');
+    Route::post('/complete', 'Api\TerritoriosController@completeRegister');
 
-    Route::get('/manzanaComplete/{id}', 'Api\ManzanasController@completeManzana');
+    //Route::get('/manzanaComplete/{id}', 'Api\ManzanasController@completeManzana');
 
     Route::get('/registrosByCongregacion/{idCong}', 'Api\RegistrosController@indexByCongregacion');
 
-    Route::post('/registrar', 'Api\RegistrosController@store');
+    //Route::post('/registrar', 'Api\RegistrosController@store');
 
     Route::post('/storeTerritorio', 'Api\TerritoriosController@storeByCongregacion');
 });

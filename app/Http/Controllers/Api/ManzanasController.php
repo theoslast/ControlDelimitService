@@ -20,12 +20,12 @@ class ManzanasController extends Controller
         return response()->json(['status' => 'ok', 'manzanas' => $manzanas ]);
     }
     
+    //obsoleto
     public function completeManzana($id)
     {
         $manzana = Manzana::find($id);
-        if ($manzana->estado == 0) {
-            $manzana->estado = 1;
-        }
+        if ($manzana->estado == 0) 
+            $manzana->estado = 1;        
         $manzana->save();
         return response()->json(['status' => 'ok', 'manzana' => 'complete']);
     }
