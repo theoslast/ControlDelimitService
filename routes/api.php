@@ -49,7 +49,7 @@ Route::group(['middleware' => 'cors'], function()
 
     //Route::get('/manzanaComplete/{id}', 'Api\ManzanasController@completeManzana');
 
-    Route::get('/registrosByCongregacion/{idCong}', 'Api\RegistrosController@indexByCongregacion');
+    Route::get('/registros/{id}', 'Api\RegistrosController@indexByCongregacion');
 
     //Route::post('/registrar', 'Api\RegistrosController@store');
 

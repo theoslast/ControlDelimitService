@@ -15,10 +15,10 @@ class RegistrosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexByCongregacion($idCong)
+    public function indexByCongregacion($id)
     {
         $registros = Registro::all()
-            ->where('idCongregacion', $idCong)
+            ->where('idCongregacion', $id)
             ->where('activo', 1);
         return response()->json(['status' => 'ok', 'registros' => $registros]);
     }
